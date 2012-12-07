@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,20 +37,23 @@ public class LocationGuess extends Activity {
     	/* Handle the button logging (Start/Stop) */
     	Button editText = (Button) findViewById(R.id.StartStopGuessing);
     	TextView statusText = (TextView) findViewById(R.id.CurrentLocationLabel);
+    	ProgressBar pb = (ProgressBar) findViewById(R.id.progressBar1);
     	
     	if(editText.getText().equals("Start Guessing")) {
     		c.prep();
     		new Thread(c).start();
+    		pb.setIndeterminate(true);
     		isRunning = true;
     		Toast.makeText(LocationGuess.this,"Beginning Guessing Process...", Toast.LENGTH_SHORT).show();
     		statusText.setText("");
-    		editText.setText("Stop Logging");
-    	} else if (editText.getText().equals("Stop Logging")) {
+    		editText.setText("Stop Guessing");
+    	} else if (editText.getText().equals("Stop Guessing")) {
     		isRunning = false;
     		c.stop();
+    		pb.setIndeterminate(false);
     		Toast.makeText(LocationGuess.this, "Stopping Guessing Process...", Toast.LENGTH_SHORT).show();
     		statusText.setText("(off)");
-    		editText.setText("Start Logging");
+    		editText.setText("Start Guessing");
     	}
     }
 }
