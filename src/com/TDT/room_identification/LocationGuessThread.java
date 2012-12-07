@@ -8,6 +8,7 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
+import android.util.Log;
 
 import com.TDT.room_identification.*;
 
@@ -23,7 +24,7 @@ public class LocationGuessThread implements Runnable{
 	private long m_timeStamp;
 	private List<ScanResult> m_wholeList;
 	
-	private String BestRoomGuess = "Unknown";
+	private String BestRoomGuess = "(off)";
 	
 	public void run() {
 		// TODO Auto-generated method stub
@@ -44,7 +45,7 @@ public class LocationGuessThread implements Runnable{
 	
 	public void stop() {
 		isRunning = false;
-		BestRoomGuess = "Unknown";
+		BestRoomGuess = "(off)";
 	}
 	
 	public boolean prep(Context context) {
@@ -63,7 +64,7 @@ public class LocationGuessThread implements Runnable{
 			if(m_wholeList!=null) 
 			{	for(int i=0;i<m_wholeList.size();i++)
 				{
-					if (m_wholeList.get(i).SSID.equals("eduroam"))
+					if (!m_wholeList.get(i).SSID.equals("eduroam"))
 						continue;
 					String[] lresults = {m_wholeList.get(i).BSSID,
 								String.valueOf(m_wholeList.get(i).level)};

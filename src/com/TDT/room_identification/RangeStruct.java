@@ -33,7 +33,7 @@ public class RangeStruct {
 		for(String[] i : cur_strength)
 		{
 			String our_mac_address = i[0];
-			int strength = Integer.valueOf(i[1]);
+			int strength = Math.abs(Integer.valueOf(i[1]));
 			
 			Iterator wifi_iterator = signal_strengths.entrySet().iterator();
 			while(wifi_iterator.hasNext()) {
@@ -60,7 +60,6 @@ public class RangeStruct {
 			
 			HashMap wifi_map = (HashMap) pairs.getValue();
 			num_in_bucket = countOverlapsInRoom(cur_values, wifi_map);	
-			
 			if(num_in_bucket > highest_overlaps) {
 				max_room = room;
 				highest_overlaps = num_in_bucket;
@@ -76,7 +75,7 @@ public class RangeStruct {
 		int low, high; // index 2,3
 		ranges.clear();
 		try {
-			reader = new CSVReader(new FileReader(Environment.getExternalStorageDirectory().toString() + File.separator + "ranges.csv"));
+			reader = new CSVReader(new FileReader(Environment.getExternalStorageDirectory().toString() + File.separator + "ranges.csv"), ',');
 			
 			String [] nextLine;
 			while ((nextLine = reader.readNext()) != null) {
