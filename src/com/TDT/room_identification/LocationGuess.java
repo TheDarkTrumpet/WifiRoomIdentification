@@ -41,7 +41,7 @@ public class LocationGuess extends Activity {
     	ProgressBar pb = (ProgressBar) findViewById(R.id.progressBar1);
     	
     	if(editText.getText().equals("Start Guessing")) {
-    		c.prep();
+    		c.prep(this);
     		new Thread(c).start();
     		pb.setIndeterminate(true);
     		isRunning = true;
