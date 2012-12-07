@@ -58,6 +58,7 @@ public class RangeStruct {
 		String Room;  // index 0
 		String wifi;  // index 1
 		int low, high; // index 2,3
+		ranges.clear();
 		try {
 			reader = new CSVReader(new FileReader(Environment.getExternalStorageDirectory().toString() + File.separator + "ranges.csv"));
 			
