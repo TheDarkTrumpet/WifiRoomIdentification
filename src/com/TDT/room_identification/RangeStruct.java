@@ -28,29 +28,45 @@ public class RangeStruct {
 		room_struct.put(wifi, ranges);
 	}
 	
-	public void printMap() {
-	    Iterator it = ranges.entrySet().iterator();
-	    while (it.hasNext()) {
-	        Map.Entry pairs = (Map.Entry)it.next();
-	        Log.v("WARNING", pairs.getKey().toString());
-	        //System.out.println(pairs.getKey() + " = " + pairs.getValue());
-	        it.remove(); // avoids a ConcurrentModificationException
-	    }
+	private int countOverlapsInRoom(ArrayList<String[]> cur_strength, HashMap signal_strengths) {
+		int overlaps = 0;
+		for(String[] i : cur_strength)
+		{
+			String our_mac_address = i[0];
+			int strength = Integer.valueOf(i[1]);
+			
+			Iterator wifi_iterator = signal_strengths.entrySet().iterator();
+			while(wifi_iterator.hasNext()) {
+				Map.Entry pairs = (Map.Entry)wifi_iterator.next();
+				String mac_addr = pairs.getKey().toString();
+				int[] levels = (int[]) pairs.getValue();
+				if(mac_addr.equals(our_mac_address) &&
+						strength >= levels[0] &&
+						strength <= levels[1])
+					overlaps++;
+			}
+		}
+		return overlaps;
 	}
-	public void classifyLocation(ArrayList<String[]> cur_values) {
+	
+	public String classifyLocation(ArrayList<String[]> cur_values) {
 		Iterator room_iterator = ranges.entrySet().iterator();
+		String max_room = "Unknown";
+		int highest_overlaps = 0;
 		while (room_iterator.hasNext()) {
 			Map.Entry pairs = (Map.Entry)room_iterator.next();
 			String room = pairs.getKey().toString();
 			int num_in_bucket = 0;
 			
 			HashMap wifi_map = (HashMap) pairs.getValue();
-			Iterator wifi_iterator = wifi_map.entrySet().iterator();
-			while(wifi_iterator.hasNext()) {
-				String mac_addr = pairs.getKey().toString();
-				int[] levels = (int[]) pairs.getValue();
+			num_in_bucket = countOverlapsInRoom(cur_values, wifi_map);	
+			
+			if(num_in_bucket > highest_overlaps) {
+				max_room = room;
+				highest_overlaps = num_in_bucket;
 			}
 		}
+		return max_room;
 	}
 	
 	public boolean loadFile () {
@@ -64,7 +80,6 @@ public class RangeStruct {
 			
 			String [] nextLine;
 			while ((nextLine = reader.readNext()) != null) {
-				Log.v("WARNING", "In nextLine");
 				Room = nextLine[0];
 				wifi = nextLine[1];
 				low = Integer.valueOf(nextLine[2]);
@@ -79,7 +94,6 @@ public class RangeStruct {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		printMap();
 		return true;
 	}
 }

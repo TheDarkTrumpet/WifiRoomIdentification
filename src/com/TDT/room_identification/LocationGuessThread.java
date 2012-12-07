@@ -23,6 +23,8 @@ public class LocationGuessThread implements Runnable{
 	private long m_timeStamp;
 	private List<ScanResult> m_wholeList;
 	
+	private String BestRoomGuess = "Unknown";
+	
 	public void run() {
 		// TODO Auto-generated method stub
 		while(isRunning) {	
@@ -36,8 +38,13 @@ public class LocationGuessThread implements Runnable{
 		}
 	}
 
+	public String getBestRoom() {
+		return BestRoomGuess;
+	}
+	
 	public void stop() {
 		isRunning = false;
+		BestRoomGuess = "Unknown";
 	}
 	
 	public boolean prep(Context context) {
@@ -71,6 +78,6 @@ public class LocationGuessThread implements Runnable{
 	
 	private void guessLocation() {
 		ArrayList<String[]> cur_location = getScanningResults();
-		rs.classifyLocation(cur_location);
+		BestRoomGuess = rs.classifyLocation(cur_location);
 	}
 }
